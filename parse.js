@@ -14,6 +14,10 @@ const PACKABLE_TYPES = [
   'fixed32', 'sfixed32', 'float'
 ];
 
+const onfieldoptionsvalue = function (tokens) {
+  return tokens.shift();
+};
+
 const onfieldoptions = function (tokens) {
   const opts = {};
 
@@ -30,7 +34,7 @@ const onfieldoptions = function (tokens) {
         if (tokens[0] !== '=') throw new Error(`Unexpected token in field options: ${tokens[0]}`);
         tokens.shift();
         if (tokens[0] === ']') throw new Error('Unexpected ] in field option');
-        opts[name] = tokens.shift();
+        opts[name] = onfieldoptionsvalue(tokens);
         break;
       case ']':
         tokens.shift();

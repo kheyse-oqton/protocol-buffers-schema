@@ -15,7 +15,28 @@ const PACKABLE_TYPES = [
 ];
 
 const onfieldoptionsvalue = function (tokens) {
-  return tokens.shift();
+  if (tokens[0] !== '{') return tokens.shift();
+  const opts = {};
+  while (tokens.length) {
+    switch (tokens[0]) {
+      case '{':
+      case ',':
+        tokens.shift();
+        if (tokens[0] === '}') break;
+        var name = tokens.shift();
+        if (tokens[0] !== ':') throw new Error(`Unexpected token in field options value: ${tokens}`);
+        tokens.shift();
+        if (tokens[0] === '}') throw new Error('Unexpected } in field options value');
+        opts[name] = onfieldoptionsvalue(tokens);
+        break;
+      case '}':
+        tokens.shift();
+        return opts;
+
+      default:
+        throw new Error(`Unexpected token in field options value: ${tokens}`);
+    }
+  }
 };
 
 const onfieldoptions = function (tokens) {
